@@ -1,13 +1,13 @@
 require('dotenv').config();
 
+const path = require('path');
 const express = require('express');
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
-
+app.use(express.static(path.join(__dirname, 'src', 'public')));
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 
 const clienteRoutes = require('./src/routes/clienteRoutes');
 app.use('/clientes', clienteRoutes);

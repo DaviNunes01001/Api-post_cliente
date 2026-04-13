@@ -50,27 +50,11 @@ async function buscarPorId(req, res) {
 // ============================================================
 async function criar(req, res) {
   try {
-    const { nome, cpf, telefone, email, datanasc, rua, numeroCasa, bairro } =
-      req.body;
+    const { nome, cpf, telefone, email } = req.body;
 
-    if (
-      !nome ||
-      !cpf ||
-      !telefone ||
-      !email ||
-      !datanasc ||
-      !rua ||
-      numeroCasa == null || // ✅ corrigido
-      !bairro
-    ) {
+    if (!nome || !cpf || !telefone || !email) {
       return res.status(400).json({
         mensagem: "Todos os campos são obrigatórios",
-      });
-    }
-
-    if (parseInt(numeroCasa) <= 0) { // ✅ simplificado
-      return res.status(400).json({
-        mensagem: "O numero da casa deve ser maior que 0",
       });
     }
 
@@ -79,10 +63,6 @@ async function criar(req, res) {
       cpf,
       telefone,
       email,
-      datanasc,
-      rua,
-      numeroCasa,
-      bairro,
     });
 
     res.status(201).json(novoCliente);
@@ -100,7 +80,7 @@ async function criar(req, res) {
 async function atualizar(req, res) {
   try {
     const id = parseInt(req.params.id);
-    const { nome, cpf, telefone, email, datanasc, rua, numeroCasa, bairro } =
+    const { nome, cpf, telefone, email} =
       req.body;
 
     if (isNaN(id)) {
@@ -109,24 +89,9 @@ async function atualizar(req, res) {
       });
     }
 
-    if (
-      !nome ||
-      !cpf ||
-      !telefone ||
-      !email ||
-      !datanasc ||
-      !rua ||
-      numeroCasa == null || // ✅ corrigido
-      !bairro
-    ) {
+    if (!nome || !cpf || !telefone || !email) {
       return res.status(400).json({
         mensagem: "Todos os campos são obrigatórios",
-      });
-    }
-
-    if (parseInt(numeroCasa) <= 0) { // ✅ adicionado (evita erro)
-      return res.status(400).json({
-        mensagem: "O numero da casa deve ser maior que 0",
       });
     }
 
@@ -135,10 +100,6 @@ async function atualizar(req, res) {
       cpf,
       telefone,
       email,
-      datanasc,
-      rua,
-      numeroCasa,
-      bairro,
     });
 
     if (ClienteAtualizado) {
@@ -188,10 +149,35 @@ async function deletar(req, res) {
   }
 }
 
+// ============================================================
+// BUSCAR POR NOME
+// ============================================================
+async function buscarPorNome(req, res) {
+  try {
+    const nome = req.params.nome;
+
+    if (!nome) {
+      return res.status(400).json({
+        mensagem: "Nome é obrigatório",
+      });
+    }
+
+    const clientes = await ClienteModel.buscarPorNome(nome);
+
+    res.status(200).json(clientes);
+  } catch (erro) {
+    res.status(500).json({
+      mensagem: "Erro ao buscar clientes por nome",
+      erro: erro.message,
+    });
+  }
+}
+
 module.exports = {
   listarTodos,
   buscarPorId,
   criar,
   atualizar,
   deletar,
+  buscarPorNome,
 };

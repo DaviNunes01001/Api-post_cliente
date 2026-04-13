@@ -12,7 +12,7 @@ const pool = new Pool({
 
 pool.connect((erro, client, release) => {
   if (erro) {
-    console.error("❌ Erro ao con+ectar ao PostgreSQL:", erro.message);
+    console.error("❌ Erro ao conectar ao PostgreSQL:", erro.message);
     console.error("💡 Verifique suas credenciais no arquivo .env");
   } else {
     console.log("✅ Conectado ao PostgreSQL!");
@@ -21,30 +21,5 @@ pool.connect((erro, client, release) => {
     release();
   }
 });
-
-const criarTabela = async () => {
-  const sql = `
-    CREATE TABLE IF NOT EXISTS clientes (
-      id_        SERIAL PRIMARY KEY,
-      nome       VARCHAR(25)   NOT NULL,
-      cpf        VARCHAR(15)  NOT NULL,
-      telefone   VARCHAR(30) NOT NULL,
-      email      VARCHAR(30) NOT NULL,
-      datanasc   DATE NOT NULL,
-      rua VARCHAR(50) NOT NULL,
-      numeroCasa INT NOT NULL,
-      bairro VARCHAR(30) NOT NULL
-    )
-  `;
-
-  try {
-    await pool.query(sql);
-    console.log("✅ Tabela clientes verificada/criada");
-  } catch (erro) {
-    console.error("❌ Erro ao criar tabela:", erro.message);
-  }
-};
-
-criarTabela();
 
 module.exports = pool;
