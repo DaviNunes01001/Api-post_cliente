@@ -1,7 +1,7 @@
 const ClienteModel = require("../models/clienteModel");
 
 // ============================================================
-// LISTAR TODOS
+// LISTAR TODOS OS CLIENTES
 // ============================================================
 async function listarTodos(req, res) {
   try {
@@ -16,7 +16,7 @@ async function listarTodos(req, res) {
 }
 
 // ============================================================
-// BUSCAR POR ID
+// BUSCAR CLIENTE POR ID
 // ============================================================
 async function buscarPorId(req, res) {
   try {
@@ -34,7 +34,7 @@ async function buscarPorId(req, res) {
       res.status(200).json(cliente);
     } else {
       res.status(404).json({
-        mensagem: `cliente de id:${id} não encontrado`,
+        mensagem: `Cliente de ID ${id} não encontrado`,
       });
     }
   } catch (erro) {
@@ -46,7 +46,37 @@ async function buscarPorId(req, res) {
 }
 
 // ============================================================
-// CRIAR
+// BUSCAR CLIENTES POR NOME
+// ============================================================
+async function buscarPorNome(req, res) {
+  try {
+    const nome = req.params.nome;
+
+    if (!nome) {
+      return res.status(400).json({
+        mensagem: "Nome é obrigatório",
+      });
+    }
+
+    const clientes = await ClienteModel.buscarPorNome(nome);
+
+    if (clientes.length > 0) {
+      res.status(200).json(clientes);
+    } else {
+      res.status(404).json({
+        mensagem: `Nenhum cliente encontrado com nome: ${nome}`,
+      });
+    }
+  } catch (erro) {
+    res.status(500).json({
+      mensagem: "Erro ao buscar cliente por nome",
+      erro: erro.message,
+    });
+  }
+}
+
+// ============================================================
+// CRIAR NOVO CLIENTE
 // ============================================================
 async function criar(req, res) {
   try {
@@ -75,13 +105,12 @@ async function criar(req, res) {
 }
 
 // ============================================================
-// ATUALIZAR
+// ATUALIZAR CLIENTE
 // ============================================================
 async function atualizar(req, res) {
   try {
     const id = parseInt(req.params.id);
-    const { nome, cpf, telefone, email} =
-      req.body;
+    const { nome, cpf, telefone, email } = req.body;
 
     if (isNaN(id)) {
       return res.status(400).json({
@@ -95,15 +124,15 @@ async function atualizar(req, res) {
       });
     }
 
-    const ClienteAtualizado = await ClienteModel.atualizar(id, {
+    const clienteAtualizado = await ClienteModel.atualizar(id, {
       nome,
       cpf,
       telefone,
       email,
     });
 
-    if (ClienteAtualizado) {
-      res.status(200).json(ClienteAtualizado);
+    if (clienteAtualizado) {
+      res.status(200).json(clienteAtualizado);
     } else {
       res.status(404).json({
         mensagem: `Cliente ${id} não encontrado`,
@@ -118,7 +147,7 @@ async function atualizar(req, res) {
 }
 
 // ============================================================
-// DELETAR
+// DELETAR CLIENTE
 // ============================================================
 async function deletar(req, res) {
   try {
@@ -143,41 +172,20 @@ async function deletar(req, res) {
     }
   } catch (erro) {
     res.status(500).json({
-      mensagem: "Erro ao deletar Cliente",
+      mensagem: "Erro ao deletar cliente",
       erro: erro.message,
     });
   }
 }
 
 // ============================================================
-// BUSCAR POR NOME
+// EXPORTAR TODAS AS FUNÇÕES
 // ============================================================
-async function buscarPorNome(req, res) {
-  try {
-    const nome = req.params.nome;
-
-    if (!nome) {
-      return res.status(400).json({
-        mensagem: "Nome é obrigatório",
-      });
-    }
-
-    const clientes = await ClienteModel.buscarPorNome(nome);
-
-    res.status(200).json(clientes);
-  } catch (erro) {
-    res.status(500).json({
-      mensagem: "Erro ao buscar clientes por nome",
-      erro: erro.message,
-    });
-  }
-}
-
 module.exports = {
   listarTodos,
   buscarPorId,
+  buscarPorNome,
   criar,
   atualizar,
   deletar,
-  buscarPorNome,
 };

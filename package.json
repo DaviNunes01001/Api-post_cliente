@@ -1,7 +1,15 @@
 {
+  "name": "api-post-cliente",
+  "version": "1.0.0",
+  "description": "API de Clientes com PostgreSQL",
+  "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "node app.js"
   },
+  "keywords": ["api", "clientes", "postgresql"],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "dotenv": "^17.3.1",
     "express": "^5.2.1",

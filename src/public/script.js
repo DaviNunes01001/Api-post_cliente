@@ -176,7 +176,7 @@ async function deletarCliente(id) {
 function exibirTabela(clientes) {
     const clientsList = document.getElementById('clientsList'); // Container
     
-    let html = ` // Inicia HTML da tabela
+    let html = `
         <table>
             <thead>
                 <tr>
